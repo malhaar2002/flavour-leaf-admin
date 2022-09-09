@@ -1,23 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:ticci_web/models/order_model.dart';
 import 'package:ticci_web/widgets/sidemenu.dart';
 import 'package:ticci_web/widgets/statusdropdown.dart';
 
 class Orders extends StatelessWidget {
   const Orders({super.key});
-
-  Color _getDataRowColor(Set<MaterialState> states) {
-    const Set<MaterialState> interactiveStates = <MaterialState>{
-      MaterialState.pressed,
-      MaterialState.hovered,
-      MaterialState.focused,
-    };
-
-    if (states.any(interactiveStates.contains)) {
-      return const Color(0xFF0046FE);
-    }
-    //return Colors.green; // Use the default value.
-    return Colors.transparent;
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -43,106 +30,62 @@ class Orders extends StatelessWidget {
               Expanded(
                 child: FittedBox(
                   child: DataTable(
-                    showCheckboxColumn: false,
-                    headingTextStyle: const TextStyle(
-                      fontWeight: FontWeight.bold,
-                    ),
-                    columns: const [
-                      DataColumn(label: Text('ID')),
-                      DataColumn(label: Text('Name')),
-                      DataColumn(label: Text('Delivery Location')),
-                      DataColumn(label: Text('Time')),
-                      DataColumn(label: Text('Cost')),
-                      DataColumn(label: Text('Status')),
-                      DataColumn(label: Text('Order')),
-                    ],
-                    rows: [
-                      DataRow(
-                        onSelectChanged: (value) => print("I was selected"),
-                        cells: [
-                          const DataCell(Text('#1')),
-                          const DataCell(Text('Malhaar Arora')),
-                          const DataCell(Text('Banana Leaf')),
-                          const DataCell(Text('Aug 27, 2022 12:13 PM')),
-                          const DataCell(Text('₹150')),
-                          const DataCell(StatusDropdown()),
-                          DataCell(
-                            Column(
-                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: const [
-                                Text('Burger x 3'),
-                                Text('Coca Cola x 1'),
-                              ],
-                            ),
-                          ),
-                        ],
+                      showCheckboxColumn: false,
+                      headingTextStyle: const TextStyle(
+                        fontWeight: FontWeight.bold,
                       ),
-                      DataRow(
-                        onSelectChanged: (value) => print("I was selected"),
-                        cells: [
-                          const DataCell(Text('#1')),
-                          const DataCell(Text('Malhaar Arora')),
-                          const DataCell(Text('Banana Leaf')),
-                          const DataCell(Text('Aug 27, 2022 12:13 PM')),
-                          const DataCell(Text('₹150')),
-                          const DataCell(StatusDropdown()),
-                          DataCell(
-                            Column(
-                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: const [
-                                Text('Burger x 3'),
-                                Text('Coca Cola x 1'),
-                              ],
-                            ),
-                          ),
-                        ],
-                      ),
-                      DataRow(
-                        onSelectChanged: (value) => print("I was selected"),
-                        cells: [
-                          const DataCell(Text('#1')),
-                          const DataCell(Text('Malhaar Arora')),
-                          const DataCell(Text('Banana Leaf')),
-                          const DataCell(Text('Aug 27, 2022 12:13 PM')),
-                          const DataCell(Text('₹150')),
-                          const DataCell(StatusDropdown()),
-                          DataCell(
-                            Column(
-                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: const [
-                                Text('Burger x 3'),
-                                Text('Coca Cola x 1'),
-                              ],
-                            ),
-                          ),
-                        ],
-                      ),
-                      DataRow(
-                        onSelectChanged: (value) => print("I was selected"),
-                        cells: [
-                          const DataCell(Text('#1')),
-                          const DataCell(Text('Malhaar Arora')),
-                          const DataCell(Text('Banana Leaf')),
-                          const DataCell(Text('Aug 27, 2022 12:13 PM')),
-                          const DataCell(Text('₹150')),
-                          const DataCell(StatusDropdown()),
-                          DataCell(
-                            Column(
-                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: const [
-                                Text('Burger x 3'),
-                                Text('Coca Cola x 1'),
-                              ],
-                            ),
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
+                      columns: const [
+                        DataColumn(label: Text('ID')),
+                        DataColumn(label: Text('Name')),
+                        DataColumn(label: Text('Delivery Location')),
+                        DataColumn(label: Text('Time')),
+                        DataColumn(label: Text('Cost')),
+                        DataColumn(label: Text('Status')),
+                        DataColumn(label: Text('Order')),
+                      ],
+                      rows: [
+                        ...OrderModel.ordersList.map((order) => DataRow(cells: [
+                              DataCell(Text(order.id.toString())),
+                              DataCell(Text(order.name)),
+                              DataCell(Text(order.deliveryLocation)),
+                              DataCell(Text(order.time.toString())),
+                              DataCell(Text(order.cost.toString())),
+                              const DataCell(StatusDropdown()),
+                              // TODO: Make this dynamic and remove hard-coded values[]
+                              DataCell(
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Padding(
+                                      padding: const EdgeInsets.symmetric(vertical: 5.0),
+                                      child: RichText(
+                                        text: TextSpan(
+                                          text: 'Burger',
+                                          children: <TextSpan>[
+                                            const TextSpan(text: ' x '),
+                                            TextSpan(
+                                              text: 2.toString(),
+                                            )
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                    RichText(
+                                      text: TextSpan(
+                                        text: 'Coca Cola',
+                                        children: <TextSpan>[
+                                          const TextSpan(text: ' x '),
+                                          TextSpan(
+                                            text: 3.toString(),
+                                          )
+                                        ],
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              )
+                            ]))
+                      ]),
                 ),
               ),
             ],
@@ -152,3 +95,16 @@ class Orders extends StatelessWidget {
     );
   }
 }
+
+// RichText(
+//                                     text: TextSpan(
+//                                       text: orderItem.itemName,
+//                                       children: <TextSpan>[
+//                                         const TextSpan(text: 'x'),
+//                                         TextSpan(
+//                                           text: orderItem.quantity.toString(),
+//                                         )
+//                                       ],
+//                                     ),
+//                                   );
+//                                 );
